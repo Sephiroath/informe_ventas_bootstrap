@@ -1,0 +1,58 @@
+body {
+  background-color: white;
+}
+
+p {
+  color: white;
+}
+
+h2 {
+  color: white;
+}
+
+#titleFont {
+  color: white;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;
+}
+
+.navbar {
+  background-color: #331a00;
+}
+
+.navbar-nav {
+  font: italic bold 12px/30px Georgia, serif;
+}
+
+.navbar-header {
+  font: italic bold 12px/30px Georgia, serif;
+}
+
+.navbar-default .navbar-brand {
+  color: white;
+}
+
+.nav.navbar-nav.navbar-right li a {
+  color: white;
+}
+
+.nav.navbar-nav.navbar-right li .dropdown-menu {
+  background-color: #331a00;
+}
+
+.container-fluid {
+  /*background-color: #CC90D4;*/
+}
+
+.img-portfolio {
+  width: 50%;
+  height: 50%;
+}
+
+.btn-dark {
+  background-color: #331a00;
+}
+
+.center-about {
+  margin-top: 10%;
+}

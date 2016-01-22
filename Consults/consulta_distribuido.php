@@ -127,20 +127,30 @@
 								.attr("class",function(d){return d})
 								.text(function(d){return d;})
 	        });*/
-			d3.csv("http://localhost:8080/informe_ventas/Data/colombia_1.csv", function(error, data) {
-				if (error) throw error;
-				var container = d3.select("#reportTable")
+			var container = d3.select("#reportTable")
 	                .append("table")
-	                .attr('class', 'table-hover')
+	                .attr('class', 'table-hover');
 
-	            // headers
-                container.append("thead").append("tr")
-                    .selectAll("th")
-                    .data(data)
-                    .enter().append("th")
-                    .text(function(d) {
-                        return 2;
-                    });  
+			d3.csv('http://localhost:8080/informe_ventas/Data/colombia_1.csv', function(data){
+			  	//the 'data' argument will be an array of objects, one object for each row so...
+			    columnsName = Object.keys( data[0] );  // then taking the first row object and getting an array of the keys
+				container.append("thead").append("tr")
+				    .selectAll("th")
+				    .data(columnsName)
+				    .enter().append("th")
+				    .text(function(d) {
+				        return d;
+				    });
+
+				container.append("tbody")
+						.selectAll("tr")
+						.data(data)
+						.enter().append("tr")
+							.selectAll("tr")
+							.text(function(d) { return d.Ciudad; });
+				container.selectAll("tbody tr")
+						.data(data)
+						.enter()
 
 			});
 		</script>

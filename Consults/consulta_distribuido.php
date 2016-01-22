@@ -6,313 +6,134 @@
 				include '../head_includes.php';
 			?>
 		<style type="text/css">
-			@import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Josefin+Slab|Arvo|Lato|Vollkorn|Abril+Fatface|Old+Standard+TT|Droid+Sans|Lobster|Inconsolata|Montserrat|Playfair+Display|Karla|Alegreya|Libre+Baskerville|Merriweather|Lora|Archivo+Narrow|Neuton|Signika|Questrial|Fjalla+One|Bitter|Varela+Round);
-			.background {
-			  fill: #eee;
-			  pointer-events: all;
-			}
-
-			.map-layer {
-			  fill: #fff;
-			  stroke: #aaa;
-			}
-
-			.effect-layer{
-			  pointer-events:none;
-			}
-
-			text{
-			  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-			  font-weight: 300;
-			}
-
-			text.big-text{
-			  font-size: 30px;
-			  font-weight: 400;
-			}
-
-			.effect-layer text, text.dummy-text{
-			  font-size: 12px;
-			}
 		</style>
 	</head>
 	<body>
-
 		<?php
 			include '../header.php';
 		?>
-		<div id="accordion">
-			<h3>Colombia TOTAL 30000000</h3>
-			<div class="row">
-				<div class="center-block col-md-4" style="">
-					<svg></svg>
-				</div>
-			</div>
-		</div>
-			<?php
-				include '../footer.php';
-			?>
-		<script>
-			$(function() {
-				$( "#accordion" ).accordion();
-			});
-	  	</script>
+	  	<div class="container-fluid">
+	  	  	<div class="row">
+		  	    <div class="col-xs-0 col-sm-3 col-md-3 col-lg-3">
+
+		  	    </div>
+		  	    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+		  	      	<h1 class="text-center">Reporte de ventas area Andina</h1>
+		  	    </div>
+		  	    <div class="col-xs-0 col-sm-3 col-md-3 col-lg-3">
+
+		  	    </div>
+		  	  </div>
+
+		  	  <div class="row">
+		  	    <div class="col-xs-0 col-sm-3 col-md-3 col-lg-3">
+
+		  	    </div>
+		  	    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+		  	      <h3 id="selectQuoteLabel" class="text-center">Seleccione informe</h3>
+		  	    </div>
+		  	    <div class="col-xs-0 col-sm-3 col-md-3 col-lg-3">
+
+		  	    </div>
+		  	  </div>
+		  	  <div class="row">
+		  	    <div class="col-xs-0 col-sm-4 col-md-4 col-lg-4">
+		  	    </div>
+		  	    <div class="col-xs-12col-sm-4 col-md-4 col-lg-4">
+		  	      <div class="row center-block">
+		  	        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+		  	          <button id="mistery" type="button" class="btn btn-block center-block btn-info">Colombia</button>
+		  	        </div>
+		  	        <div id="adventure" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+		  	          <button type="button" class="btn btn-block center-block btn-info">Argentina</button>
+		  	        </div>
+		  	      </div>
+		  	    </div>
+		  	    <div class="col-xs-0 col-sm-4 col-md-4 col-lg-4">
+		  	    </div>
+		  	  </div>
+		  	  <div class="row">
+		  	    <div class="col-xs-0 col-sm-0 col-md-1 col-lg-1"></div>
+		  	    <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
+		  	      <div class="jumbotron">
+		  	      	<!--Table Based On DATA-->
+		  	   		<div id="reportTable" class="component"></div>
+		  	   		<!--Table Based On DATA-->
+		  	       	<div id="countryTotal"></div>
+		  	      </div>
+		  	    </div>
+		  	    <div class="col-xs-0 col-sm-0 col-md-1 col-lg-1"></div>
+		  	  </div>
+		  	</div>
+	  	</div>
+		<!-- Modal -->
+	    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	      <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	          <div class="modal-header">
+	            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	            <h4 class="modal-title" id="myModalLabel">Ciudad Seleccionada</h4>
+	          </div>
+	          <div class="modal-body">
+	            <div class="table-responsive"> 
+	                <table class="table table-bordered">
+	                    <thead>
+	                        <tr>
+	                            <th>Ctd.fact.</th>
+	                            <th>Cant.Obsequio</th>
+	                            <th>Valor Bruto</th>
+	                            <th>Dto. Fin.</th>
+	                            <th>Dto. Cab</th>
+	                            <th>Dto. Pro.</th>
+	                            <th>IVA</th>
+	                            <th>IVA Obsequio</th>
+	                            <th>Valor neto</th>
+	                            <th>Descuento</th>
+	                            <th>Venta Neta</th>
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+
+	                    </tbody>
+	                </table>
+	            </div>
+	          </div>
+		<script src="http://localhost:8080/informe_ventas/JS/d3.min.js" charset="utf-8"></script>
 		<script type="text/javascript">
-			var width = 960,
-			    height = 500,
-			    centered;
-			var aspect = width / height,
-			    chart = d3.select('svg');
-			d3.select(window)
-			  .on("resize", function() {
-			    var targetWidth = chart.node().getBoundingClientRect().width;
-			    chart.attr("width", targetWidth);
-			    chart.attr("height", targetWidth / aspect);
-			  });
+			d3.text("http://localhost:8080/informe_ventas/Data/Colombia.csv", function(data) {
+	            var rows = d3.csv.parseRows(data);
 
-			// Define color scale
-			var color = d3.scale.linear()
-			  .domain([1, 20])
-			  .clamp(true)
-			  .range(['#fff', '#409A99']);
+	            var container = d3.select("#reportTable")
+	                .append("table")
+	                .attr('class', 'table-hover')
 
-			var projection = d3.geo.mercator()
-			  .scale(1500)
-			  // Center the Map in Colombia
-			  .center([-74, 4.5])
-			  .translate([width / 2, height / 2]);
+	                // headers
+                    container.append("thead").append("tr")
+                        .selectAll("th")
+                        .data(rows[0])
+                        .enter().append("th")
+                        .text(function(d) {
+                            return d;
+                        });
 
-			var path = d3.geo.path()
-			  .projection(projection);
+                    // data
+                    container.append("tbody")
+						.selectAll("tr").data(rows.slice(1))
+						.enter().append("tr")
 
-			// Set svg width & height
-			var svg = d3.select('svg')
-			  .attr('width', width)
-			  .attr('height', height);
-
-			// Add background
-			svg.append('rect')
-			  .attr('class', 'background')
-			  .attr('width', width)
-			  .attr('height', height)
-			  .on('click', clicked);
-
-			var g = svg.append('g');
-
-			var effectLayer = g.append('g')
-			  .classed('effect-layer', true);
-
-			var mapLayer = g.append('g')
-			  .classed('map-layer', true);
-
-			var dummyText = g.append('text')
-			  .classed('dummy-text', true)
-			  .attr('x', 10)
-			  .attr('y', 30)
-			  .style('opacity', 0);
-
-			var bigText = g.append('text')
-			  .classed('big-text', true)
-			  .attr('x', 20)
-			  .attr('y', 45);
-
-			// Load map data
-			d3.json('JSON/colombia.geo.json', function(error, mapData) {
-			  var features = mapData.features;
-
-			  // Update color scale domain based on data
-			  color.domain([0, d3.max(features, nameLength)]);
-
-			  // Draw each province as a path
-			  mapLayer.selectAll('path')
-			      .data(features)
-			    .enter().append('path')
-			      .attr('d', path)
-			      .attr('vector-effect', 'non-scaling-stroke')
-			      .style('fill', fillFn)
-			      .on('mouseover', mouseover)
-			      .on('mouseout', mouseout)
-			      .on('click', clicked);
-			});
-
-			// Get province name
-			function nameFn(d){
-			  return d && d.properties ? d.properties.NOMBRE_DPT : null;
-			}
-
-			// Get province name length
-			function nameLength(d){
-			  var n = nameFn(d);
-			  return n ? n.length : 0;
-			}
-
-			// Get province color
-			function fillFn(d){
-			  return color(nameLength(d));
-			}
-
-			// When clicked, zoom in
-			function clicked(d) {
-			  var x, y, k;
-
-			  // Compute centroid of the selected path
-			  if (d && centered !== d) {
-			    var centroid = path.centroid(d);
-			    x = centroid[0];
-			    y = centroid[1];
-			    k = 4;
-			    centered = d;
-			  } else {
-			    x = width / 2;
-			    y = height / 2;
-			    k = 1;
-			    centered = null;
-			  }
-
-			  // Highlight the clicked province
-			  mapLayer.selectAll('path')
-			    .style('fill', function(d){return centered && d===centered ? '#D5708B' : fillFn(d);});
-
-			  // Zoom
-			  g.transition()
-			    .duration(750)
-			    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')scale(' + k + ')translate(' + -x + ',' + -y + ')');
-			}
-
-			function mouseover(d){
-			  // Highlight hovered province
-			  d3.select(this).style('fill', 'orange');
-
-			  // Draw effects
-			  textArt(nameFn(d));
-			}
-
-			function mouseout(d){
-			  // Reset province color
-			  mapLayer.selectAll('path')
-			    .style('fill', function(d){return centered && d===centered ? '#D5708B' : fillFn(d);});
-
-			  // Remove effect text
-			  effectLayer.selectAll('text').transition()
-			    .style('opacity', 0)
-			    .remove();
-
-			  // Clear province name
-			  bigText.text('');
-			}
-
-			// Gimmick
-			// Just me playing around.
-			// You won't need this for a regular map.
-
-			var BASE_FONT = "'Helvetica Neue', Helvetica, Arial, sans-serif";
-
-			var FONTS = [
-			  "Open Sans",
-			  "Josefin Slab",
-			  "Arvo",
-			  "Lato",
-			  "Vollkorn",
-			  "Abril Fatface",
-			  "Old StandardTT",
-			  "Droid+Sans",
-			  "Lobster",
-			  "Inconsolata",
-			  "Montserrat",
-			  "Playfair Display",
-			  "Karla",
-			  "Alegreya",
-			  "Libre Baskerville",
-			  "Merriweather",
-			  "Lora",
-			  "Archivo Narrow",
-			  "Neuton",
-			  "Signika",
-			  "Questrial",
-			  "Fjalla One",
-			  "Bitter",
-			  "Varela Round"
-			];
-
-			function textArt(text){
-			  // Use random font
-			  var fontIndex = Math.round(Math.random() * FONTS.length);
-			  var fontFamily = FONTS[fontIndex] + ', ' + BASE_FONT;
-
-			  bigText
-			    .style('font-family', fontFamily)
-			    .text(text);
-
-			  // Use dummy text to compute actual width of the text
-			  // getBBox() will return bounding box
-			  dummyText
-			    .style('font-family', fontFamily)
-			    .text(text);
-			  var bbox = dummyText.node().getBBox();
-
-			  var textWidth = bbox.width;
-			  var textHeight = bbox.height;
-			  var xGap = 3;
-			  var yGap = 1;
-
-			  // Generate the positions of the text in the background
-			  var xPtr = 0;
-			  var yPtr = 0;
-			  var positions = [];
-			  var rowCount = 0;
-			  while(yPtr < height){
-			    while(xPtr < width){
-			      var point = {
-			        text: text,
-			        index: positions.length,
-			        x: xPtr,
-			        y: yPtr
-			      };
-			      var dx = point.x - width/2 + textWidth/2;
-			      var dy = point.y - height/2;
-			      point.distance = dx*dx + dy*dy;
-
-			      positions.push(point);
-			      xPtr += textWidth + xGap;
-			    }
-			    rowCount++;
-			    xPtr = rowCount%2===0 ? 0 : -textWidth/2;
-			    xPtr += Math.random() * 10;
-			    yPtr += textHeight + yGap;
-			  }
-
-			  var selection = effectLayer.selectAll('text')
-			    .data(positions, function(d){return d.text+'/'+d.index;});
-
-			  // Clear old ones
-			  selection.exit().transition()
-			    .style('opacity', 0)
-			    .remove();
-
-			  // Create text but set opacity to 0
-			  selection.enter().append('text')
-			    .text(function(d){return d.text;})
-			    .attr('x', function(d){return d.x;})
-			    .attr('y', function(d){return d.y;})
-			    .style('font-family', fontFamily)
-			    .style('fill', '#777')
-			    .style('opacity', 0);
-
-			  selection
-			    .style('font-family', fontFamily)
-			    .attr('x', function(d){return d.x;})
-			    .attr('y', function(d){return d.y;});
-
-			  // Create transtion to increase opacity from 0 to 0.1-0.5
-			  // Add delay based on distance from the center of the <svg> and a bit more randomness.
-			  selection.transition()
-			    .delay(function(d){
-			      return d.distance * 0.01 + Math.random()*1000;
-			    })
-			    .style('opacity', function(d){
-			      return 0.1 + Math.random()*0.4;
-			    });
-			}
+						.selectAll("td")
+							.data(function(d){return d;})
+							.enter().append("td")
+								.attr("class",function(d){return d})
+								.text(function(d){return d;})
+	        });
 		</script>
+		<?php
+			include '../footer.php';
+		?>
+		<script src="http://localhost:8080/informe_ventas/JS/jquery.ba-throttle-debounce.min.js" charset="utf-8"></script>
+		<script src="http://localhost:8080/informe_ventas/JS/jquery.stickyheader.js" charset="utf-8"></script>
+		</script>
+		<script type="text/javascript">
 	</body>
 </html>

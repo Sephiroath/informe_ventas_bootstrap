@@ -1,0 +1,88 @@
+<div class="component">
+	  	        		<table class="table table-hover">
+	  	                    <thead>
+	  	                        <tr>
+	  	                            <th>Zona de ventas</th>
+	  	                            <th>% distribuci&oacute;n</th>
+	  	                            <th>Total</th>
+	  	                        </tr>
+	  	                    </thead>
+	  	                    <tbody>
+	  	                        <tr>
+	  	                            <td><a data-toggle="modal" data-target="#myModal">Buenos Aires</a></td>
+	  	                            <td>35</td>
+	  	                            <td>500000</td>
+	  	                        </tr>
+	  	                        <tr>
+	  	                            <td><a data-toggle="modal" data-target="#myModal">Cordoba</a></td>
+	  	                            <td>15</td>
+	  	                            <td>500000</td>
+	  	                        </tr>
+	  	                        <tr>
+	  	                            <td><a data-toggle="modal" data-target="#myModal">Rosario</a></td>
+	  	                            <td>20</td>
+	  	                            <td>500000</td>
+	  	                        </tr>
+	  	                        <tr>
+	  	                            <td><a data-toggle="modal" data-target="#myModal">La plata</a></td>
+	  	                            <td>10</td>
+	  	                            <td>500000</td>
+	  	                        </tr>
+	  	                        <tr>
+	  	                            <td><a data-toggle="modal" data-target="#myModal">Mar de plata</a></td>
+	  	                            <td>5</td>
+	  	                            <td>500000</td>
+	  	                        </tr>
+	  	                        <tr>
+	  	                            <td><a data-toggle="modal" data-target="#myModal">Buenos Aires</a></td>
+	  	                            <td>35</td>
+	  	                            <td>500000</td>
+	  	                        </tr>
+	  	                        <tr>
+	  	                            <td><a data-toggle="modal" data-target="#myModal">Cordoba</a></td>
+	  	                            <td>15</td>
+	  	                            <td>500000</td>
+	  	                        </tr>
+	  	                        <tr>
+	  	                            <td><a data-toggle="modal" data-target="#myModal">Rosario</a></td>
+	  	                            <td>20</td>
+	  	                            <td>500000</td>
+	  	                        </tr>
+	  	                        <tr>
+	  	                            <td><a data-toggle="modal" data-target="#myModal">La plata</a></td>
+	  	                            <td>10</td>
+	  	                            <td>500000</td>
+	  	                        </tr>
+	  	                        <tr>
+	  	                            <td><a data-toggle="modal" data-target="#myModal">Mar de plata</a></td>
+	  	                            <td>5</td>
+	  	                            <td>500000</td>
+	  	                        </tr>
+	  	                        <tr>
+	  	                            <td><a data-toggle="modal" data-target="#myModal">Buenos Aires</a></td>
+	  	                            <td>35</td>
+	  	                            <td>500000</td>
+	  	                        </tr>
+	  	                        <tr>
+	  	                            <td><a data-toggle="modal" data-target="#myModal">Cordoba</a></td>
+	  	                            <td>15</td>
+	  	                            <td>500000</td>
+	  	                        </tr>
+	  	                        <tr>
+	  	                            <td><a data-toggle="modal" data-target="#myModal">Rosario</a></td>
+	  	                            <td>20</td>
+	  	                            <td>500000</td>
+	  	                        </tr>
+	  	                        <tr>
+	  	                            <td><a data-toggle="modal" data-target="#myModal">La plata</a></td>
+	  	                            <td>10</td>
+	  	                            <td>500000</td>
+	  	                        </tr>
+	  	                        <tr>
+	  	                            <td><a data-toggle="modal" data-target="#myModal">Mar de plata</a></td>
+	  	                            <td>5</td>
+	  	                            <td>500000</td>
+	  	                        </tr>
+	  	                    </tbody>
+	  	                </table>
+		  	        </div>

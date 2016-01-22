@@ -100,7 +100,7 @@
 	          </div>
 		<script src="http://localhost:8080/informe_ventas/JS/d3.min.js" charset="utf-8"></script>
 		<script type="text/javascript">
-			d3.text("http://localhost:8080/informe_ventas/Data/Colombia.csv", function(data) {
+			/*d3.text("http://localhost:8080/informe_ventas/Data/colombia_1.csv", function(data) {
 	            var rows = d3.csv.parseRows(data);
 
 	            var container = d3.select("#reportTable")
@@ -126,7 +126,23 @@
 							.enter().append("td")
 								.attr("class",function(d){return d})
 								.text(function(d){return d;})
-	        });
+	        });*/
+			d3.csv("http://localhost:8080/informe_ventas/Data/colombia_1.csv", function(error, data) {
+				if (error) throw error;
+				var container = d3.select("#reportTable")
+	                .append("table")
+	                .attr('class', 'table-hover')
+
+	            // headers
+                container.append("thead").append("tr")
+                    .selectAll("th")
+                    .data(data)
+                    .enter().append("th")
+                    .text(function(d) {
+                        return 2;
+                    });  
+
+			});
 		</script>
 		<?php
 			include '../footer.php';

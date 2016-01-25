@@ -67,92 +67,126 @@
 		  	</div>
 	  	</div>
 		<!-- Modal -->
-	    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-	      <div class="modal-dialog" role="document">
+	    <div class="modal fade" id="CundinamarcaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	      <div class="modal-dialog modal-lg" role="document">
 	        <div class="modal-content">
 	          <div class="modal-header">
 	            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	            <h4 class="modal-title" id="myModalLabel">Ciudad Seleccionada</h4>
 	          </div>
-	          <div class="modal-body">
-	            <div class="table-responsive"> 
-	                <table class="table table-bordered">
-	                    <thead>
-	                        <tr>
-	                            <th>Ctd.fact.</th>
-	                            <th>Cant.Obsequio</th>
-	                            <th>Valor Bruto</th>
-	                            <th>Dto. Fin.</th>
-	                            <th>Dto. Cab</th>
-	                            <th>Dto. Pro.</th>
-	                            <th>IVA</th>
-	                            <th>IVA Obsequio</th>
-	                            <th>Valor neto</th>
-	                            <th>Descuento</th>
-	                            <th>Venta Neta</th>
-	                        </tr>
-	                    </thead>
-	                    <tbody>
-
-	                    </tbody>
-	                </table>
-	            </div>
+	          <div class="modal-body" id="CundinamarcaModalBody">
+	            
 	          </div>
 		<script src="http://localhost:8080/informe_ventas/JS/d3.min.js" charset="utf-8"></script>
 		<script type="text/javascript">
-			/*d3.text("http://localhost:8080/informe_ventas/Data/colombia_1.csv", function(data) {
-	            var rows = d3.csv.parseRows(data);
-
-	            var container = d3.select("#reportTable")
-	                .append("table")
-	                .attr('class', 'table-hover')
-
-	                // headers
-                    container.append("thead").append("tr")
-                        .selectAll("th")
-                        .data(rows[0])
-                        .enter().append("th")
-                        .text(function(d) {
-                            return d;
-                        });
-
-                    // data
-                    container.append("tbody")
-						.selectAll("tr").data(rows.slice(1))
-						.enter().append("tr")
-
-						.selectAll("td")
-							.data(function(d){return d;})
-							.enter().append("td")
-								.attr("class",function(d){return d})
-								.text(function(d){return d;})
-	        });*/
-			var container = d3.select("#reportTable")
+			d3.csv('http://localhost:8080/informe_ventas/Data/colombia.csv', function(data){
+				var container = d3.select("#reportTable")
 	                .append("table")
 	                .attr('class', 'table-hover');
-
-			d3.csv('http://localhost:8080/informe_ventas/Data/colombia_1.csv', function(data){
-			  	//the 'data' argument will be an array of objects, one object for each row so...
-			    columnsName = Object.keys( data[0] );  // then taking the first row object and getting an array of the keys
-				container.append("thead").append("tr")
-				    .selectAll("th")
-				    .data(columnsName)
-				    .enter().append("th")
-				    .text(function(d) {
+			    columnsName = Object.keys( data[0] ); 
+				// create table header
+			    container.append('thead').append('tr')
+			        .selectAll('th')
+			        .data(columnsName).enter()
+			        .append('th')
+			        .text(function(d) {
 				        return d;
 				    });
+				var tr = container.append('tbody').selectAll('tr')
+				    .data(data).enter()
+				    .append('tr');
 
-				container.append("tbody")
-						.selectAll("tr")
-						.data(data)
-						.enter().append("tr")
-							.selectAll("tr")
-							.text(function(d) { return d.Ciudad; });
-				container.selectAll("tbody tr")
-						.data(data)
-						.enter()
+				tr.append('th')
+				    .attr('class', 'Ciudad')
+				    .html(function(m) { return "<a data-toggle='modal' data-target='#" + m.Ciudad + "Modal'>" + m.Ciudad + "</a>"; });
 
+				tr.append('td')
+				    .attr('class', 'Porcentaje')
+				    .html(function(m) { return m.Porcentaje; });
+
+				tr.append('td')
+				    .attr('class', 'Valor Bruto')
+				    .html(function(m) { return m.ValorBruto; });
+
+				tr.append('td')
+				    .attr('class', 'IVA')
+				    .html(function(m) { return m.IVA; });
+
+				tr.append('td')
+				    .attr('class', 'Descuento')
+				    .html(function(m) { return m.Descuento; });
+
+				tr.append('td')
+				    .attr('class', 'VentaNeta')
+				    .html(function(m) { return m.VentaNeta; });
 			});
+
+			var width = 900,
+			    height = 500,
+			    radius = Math.min(width, height) / 2;
+
+			var color = d3.scale.ordinal()
+			    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+			var arc = d3.svg.arc()
+			    .outerRadius(radius - 10)
+			    .innerRadius(0);
+
+			var labelArc = d3.svg.arc()
+			    .outerRadius(radius - 40)
+			    .innerRadius(radius - 40);
+
+			var pie = d3.layout.pie()
+			    .sort(null)
+			    .value(function(d) { return d.Porcentaje; });
+
+			var svg = d3.select("#CundinamarcaModalBody").append("svg")
+				.attr('id', 'cundinamarcaSVG')
+			    .attr("width", width)
+			    .attr("height", height)
+			    .attr('viewBox', '0 0 ' + width + ' ' + height)
+			  	.attr('preserveAspectRatio', 'xMidYMid  meet')
+			  .append("g")
+			    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+			d3.csv("http://localhost:8080/informe_ventas/Data/colombia_cundinamarca.csv", type, function(error, data) {
+			  if (error) throw error;
+
+			  var g = svg.selectAll(".arc")
+			      .data(pie(data))
+			    .enter().append("g")
+			      .attr("class", "arc");
+
+			  g.append("path")
+			      .attr("d", arc)
+			      .style("fill", function(d) { return color(d.data.Producto); });
+
+			  g.append("text")
+			      .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
+			      .attr("dy", ".35em")
+			      .text(function(d) { return d.data.Producto; });
+			  var chart = $("#cundinamarcaSVG"),
+			      aspect = chart.width() / chart.height(),
+			      mContainer = chart.parent();
+			  $(window).on("resize", function() {
+			      var targetWidth = mContainer.width();
+			      if(targetWidth >= 0)
+			      {
+				        chart.attr("width", targetWidth);
+				        chart.attr("height", Math.round(targetWidth / aspect));
+				  }else
+				  {
+				  		chart.attr("width", 500);
+				        chart.attr("height", 250);
+				  }
+			  }).trigger("resize");
+			});
+
+			function type(d) {
+			  d.Porcentaje = +d.Porcentaje;
+			  return d;
+			}
+			
 		</script>
 		<?php
 			include '../footer.php';

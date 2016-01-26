@@ -6,6 +6,30 @@
 	include '../head_includes.php';
 	?>
 	<style type="text/css">
+		.tooltip {
+	        background: #eee;
+	        box-shadow: 0 0 5px #999999;
+	        color: #333;
+	        display: none;
+	        font-size: 12px;
+	        left: 130px;
+	        padding: 10px;
+	        position: absolute;
+	        text-align: center;
+	        top: 95px;
+	        width: 80px;
+	        z-index: 10;
+	      }
+	      .legend {
+	        font-size: 12px;
+	      }
+	      rect {
+	        cursor: pointer;                                              /* NEW */
+	        stroke-width: 2;
+	      }
+	      rect.disabled {                                                 /* NEW */
+	        fill: transparent !important;                                 /* NEW */
+	      }
 	</style>
 </head>
 <body>
@@ -74,7 +98,23 @@
 				<h4 class="modal-title" id="myModalLabel">Ciudad Seleccionada</h4>
 			</div>
 			<div class="modal-body" id="ModalBody">
-
+				
+			</div>
+			<div id="toolTipDiv">
+				<table>
+					<tr>
+						<td>Producto</td>
+						<td id='productLabel'></td>
+					</tr>
+					<tr>
+						<td>cantidad</td>
+						<td id='quantityLabel'></td>
+					</tr>
+					<tr>
+						<td>Porcentaje</td>
+						<td id='percentageLabel'></td>
+					</tr>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -174,12 +214,15 @@ function generateModalPieChart(countryCity){
 	var width = 900,
 	height = 500,
 	radius = Math.min(width, height) / 2;
+	var donutWidth = 75;
+    var legendRectSize = 18;
+    var legendSpacing = 4;
 
 	var color = d3.scale.category20b();
 
 	var arc = d3.svg.arc()
 	.outerRadius(radius - 10)
-	.innerRadius(0);
+	.innerRadius(radius - donutWidth);
 
 	var labelArc = d3.svg.arc()
 	.outerRadius(radius - 40)
@@ -187,67 +230,157 @@ function generateModalPieChart(countryCity){
 
 	var pie = d3.layout.pie()
 	.sort(null)
-	.value(function(d) { return d.Porcentaje; });
+	.value(function(d) { return d.count; });
 
 	var svg = d3.select("#ModalBody").append("svg")
-	.attr('id', 'countrySVG')
-	.attr("width", width)
-	.attr("height", height)
-	.attr('viewBox', '0 0 ' + width + ' ' + height)
-	.attr('preserveAspectRatio', 'xMidYMid  meet')
-	.append("g")
-	.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+		.attr('id', 'countrySVG')
+		.attr("width", width)
+		.attr("height", height)
+		.attr('viewBox', '0 0 ' + width + ' ' + height)
+		.attr('preserveAspectRatio', 'xMidYMid  meet')
+		.append("g")
+		.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+	var tooltip = d3.select('#toolTipDiv')
+          .append('div')
+          .attr('class', 'tooltip');
+        
+        tooltip.append('div')
+          .attr('class', 'label');
+
+        tooltip.append('div')
+          .attr('class', 'count');
+
+        tooltip.append('div')
+          .attr('class', 'percent');
 
 	d3.csv("http://localhost:8080/informe_ventas/Data/" + country + "_" + noSpaceCity + ".csv", type, function(error, data) {
 		if (error) throw error;
 
-		var g = svg.selectAll(".arc")
-		.data(pie(data))
-		.enter().append("g")
-		.attr("class", "arc");
+		data.forEach(function(d) {
+			d.count = +d.count;
+			d.enabled = true;
+		});
 
-		g.append("path")
-		.attr("d", arc)
-		.style("fill", function(d) { return color(d.data.Producto); })
-		.on('click', clicked)
-		.on('mouseenter', mouseEnter)
-		.on('mouseleave', mouseLeave);
+		var path = svg.selectAll('path')
+			.data(pie(data))
+			.enter()
+			.append('path')
+			.attr('d', arc)
+			.attr('fill', function(d, i) { 
+			  return color(d.data.label); 
+			})
+			.each(function(d) { this._current = d; });                
 
-				  //g.append("text")
-				  //    .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
-				  //    .attr("dy", ".35em")
-				  //    .text(function(d) { return d.data.Producto; });
-				  var chart = $("#countrySVG"),
-				  aspect = chart.width() / chart.height(),
-				  mContainer = chart.parent();
-				  //Labels
-				  g.append("text")
-				  .attr("transform", function(d) {
-				  	return "translate(" + arc.centroid(d) + ")";
-				  })
-				  .attr("text-anchor", "middle")
-				  .text(function(d) {
-				  	return d.data.Porcentaje +"%";
-				  });
-				  $(window).on('shown.bs.modal', function() { 
-				  	var targetWidth = mContainer.width();
-				  	chart.attr("width", targetWidth);
-				  	chart.attr("height", Math.round(targetWidth / aspect));
-				  });
-				  $(window).on("resize", function() {
-				  	var targetWidth = mContainer.width();
-				  	if(targetWidth >= 0)
-				  	{
-				  		chart.attr("width", targetWidth);
-				  		chart.attr("height", Math.round(targetWidth / aspect));
-				  	}else
-				  	{
-				  		chart.attr("width", 500);
-				  		chart.attr("height", 250);
-				  	}
-				  }).trigger("resize");
+		path.on('mouseover', function(d) {
+			lastColor = d3.select(this).style("fill");
+			d3.select(this).style('fill', 'orange');
+			var total = d3.sum(data.map(function(d) {
+			  return (d.enabled) ? d.count : 0;                      
+			}));
+			var percent = Math.round(1000 * d.data.count / total) / 10;
+				tooltip.select('.label').html(d.data.label);
+				tooltip.select('.count').html(d.data.count); 
+				tooltip.select('.percent').html(percent + '%'); 
+				tooltip.style('display', 'block');
+				$('#productLabel').html(d.data.label);
+				$('#quantityLabel').html(d.data.count);
+				$('#percentageLabel').html(percent + '%');
+			});	
+		
+		path.on('mouseout', function() {
+			d3.select(this).style('fill', lastColor);
+			tooltip.style('display', 'none');
+			$('#productLabel').html("");
+			$('#quantityLabel').html("");
+			$('#percentageLabel').html("");
+		});
 
-				});
+		/* OPTIONAL 
+		path.on('mousemove', function(d) {
+		tooltip.style('top', (d3.event.pageY + 10) + 'px')
+		  .style('left', (d3.event.pageX + 10) + 'px');
+		});
+		*/
+
+		var legend = svg.selectAll('.legend')
+			.data(color.domain())
+			.enter()
+			.append('g')
+			.attr('class', 'legend')
+			.attr('transform', function(d, i) {
+			  var height = legendRectSize + legendSpacing;
+			  var offset =  height * color.domain().length / 2;
+			  var horz = -2 * legendRectSize;
+			  var vert = i * height - offset;
+			  return 'translate(' + horz + ',' + vert + ')';
+			});
+
+		legend.append('rect')
+		.attr('width', legendRectSize)
+		.attr('height', legendRectSize)                                   
+		.style('fill', color)
+		.style('stroke', color)
+		.on('click', function(label) {
+		  var rect = d3.select(this);
+		  var enabled = true;
+		  var totalEnabled = d3.sum(data.map(function(d) {     
+		    return (d.enabled) ? 1 : 0;                           
+		  }));
+		  
+		  if (rect.attr('class') === 'disabled') {                
+		    rect.attr('class', '');                               
+		  } else {                                                
+		    if (totalEnabled < 2) return;                         
+		    rect.attr('class', 'disabled');                       
+		    enabled = false;                                      
+		  }
+
+		  pie.value(function(d) {                                 
+		    if (d.label === label) d.enabled = enabled;           
+		    return (d.enabled) ? d.count : 0;                     
+		  });                                                     
+
+		  path = path.data(pie(data));                         
+
+		  path.transition()                                       
+		    .duration(750)                                        
+		    .attrTween('d', function(d) {                         
+		      var interpolate = d3.interpolate(this._current, d); 
+		      this._current = interpolate(0);                     
+		      return function(t) {                                
+		        return arc(interpolate(t));                       
+		      };                                                  
+		    });                                                   
+		});
+
+		legend.append('text')
+		.attr('x', legendRectSize + legendSpacing)
+		.attr('y', legendRectSize - legendSpacing)
+		.text(function(d) { return d; });
+
+		var chart = $("#countrySVG"),
+		aspect = chart.width() / chart.height(),
+		mContainer = chart.parent();
+		$(window).on('shown.bs.modal', function() { 
+			var targetWidth = mContainer.width();
+			chart.attr("width", targetWidth);
+			chart.attr("height", Math.round(targetWidth / aspect));
+		});
+		$(window).on("resize", function() {
+			var targetWidth = mContainer.width();
+			if(targetWidth >= 0)
+			{
+				chart.attr("width", targetWidth);
+				chart.attr("height", Math.round(targetWidth / aspect));
+			}else
+			{
+				chart.attr("width", 500);
+				chart.attr("height", 250);
+			}
+		}).trigger("resize");
+
+	});
 }
 function clicked(d){
 	alert(d.data.Producto);	
@@ -260,7 +393,7 @@ function mouseLeave(d){
 	d3.select(this).style('fill', lastColor);
 }
 function type(d) {
-	d.Porcentaje = +d.Porcentaje;
+	d.count = +d.count;
 	return d;
 }
 </script>

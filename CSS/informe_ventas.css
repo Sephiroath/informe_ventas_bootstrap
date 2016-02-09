@@ -83,7 +83,7 @@ a {
 }
 
 a:hover, a:focus {
-  color: #7c8d87;
+  color: white;
 }
 
 .container > header {
@@ -235,13 +235,13 @@ td, th {
     line-height: 1;
   }
 th {
-    background-color: #31bc86;
+    background-color: steelblue;
     font-weight: bold;
     color: #fff;
     white-space: nowrap;
 }
 tbody th {
-  background-color: #2ea879;
+  background-color: steelblue;
 }
 tbody tr:nth-child(2n-1) {
     background-color: #f5f5f5;

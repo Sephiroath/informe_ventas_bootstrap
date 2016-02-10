@@ -150,7 +150,16 @@ include '../footer.php';
 						}
 					})
 					.text(function(d) {
-						return d;
+						switch (d) {
+						  case "ValorBruto":
+						    return "Valor Bruto";
+						    break;
+						  case "VentaNeta":
+						  	return "Venta Neta";
+						  	break;
+						  default: 
+						    return d;
+						}
 					});
 					var tr = container.append('tbody').selectAll('tr')
 					.data(data).enter()
